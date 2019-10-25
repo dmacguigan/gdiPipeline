@@ -36,6 +36,9 @@ bppInputs(x)
   \item{nloci}{
   number of loci
   }
+  \item{threads}{
+  number of threads for BPP
+  }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~

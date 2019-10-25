@@ -10,9 +10,11 @@ BPPCtlTemplate <- function(wd){
   "  mcmcfile = mcmc.txt",
   "  speciesdelimitation = 0",
   "  speciestree = 0",
+  "  speciesmodelprior = 1",
   "  species&tree = ",
   "                 nsamples",
   "                 phy;",
+  "  diploid = 1",
   "  cleandata = 0",
   "  usedata = 1",
   "  nloci = n",
@@ -21,14 +23,15 @@ BPPCtlTemplate <- function(wd){
   "  heredity = 2 heredity.txt",
   "  locusrate = 1 2.0",
   "  finetune = 1: .2 .0002 .001 .00001 .08 .02 .01 .01 .01",
-  "  print = 1 0 0",
+  "  threads = nThreads",
+  "  print = 1 0 0 0",
   "  burnin = 10000",
   "  sampfreq = 50",
   "  nsample = 10000"), fileConn)
   close(fileConn)
 }
 
-bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci) {
+bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, threads) {
   # set working directory
   setwd(wd)
 
@@ -68,7 +71,9 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci) {
     ctlTxt <- sub("phy", tree_newick, ctlTxt)
     ctlTxt <- sub("species&tree = ", paste("species&tree = ", length(tipLabs), " ", taxa_names, sep=""), ctlTxt)
     ctlTxt <- sub("nsamples", taxa_counts, ctlTxt)
-    ctlTxt <- sub("thetaprior = a b", paste("thetaprior = ", paste(prior_df[j,3:4], collapse=" "), " e", sep=""), ctlTxt)
+    ctlTxt <- sub("nThreads", threads, ctlTxt)
+    ctlTxt <- sub("diploid = 1", paste("diploid = ", rep(1, length(tipLabs), sep = "", collpase = " "), ctlTxt)
+    ctlTxt <- sub("thetaprior = a b", paste("thetaprior = ", paste(prior_df[j,3:4], collapse=" "), " E", sep=""), ctlTxt)
     ctlTxt <- sub("tauprior = a b", paste("tauprior = ", paste(prior_df[j,1:2], collapse=" "), sep=""), ctlTxt)
     ctlTxt <- sub("nloci = n", paste("nloci = ", nloci, sep=""), ctlTxt)
     writeLines(ctlTxt, paste(newDir,"/bpp.ctl",sep=""))
