@@ -27,6 +27,7 @@ heredity = "heredity.txt"
 loci = "Elep_allLoci.txt"
 ctl = "ctlTemplate.ctl" # this file will be created below by the function BPPCtlTemplate
 plotColors = c(brewer.pal(12, "Paired"))
+nloci = 14
 
 # pipeline steps
 
@@ -35,7 +36,7 @@ BPPCtlTemplate(wd)
 bppInputs(wd, treefile, map,
           priors,
           heredity, loci,
-          ctl, 14)
+          ctl, nloci)
 
 bppTaskFile(wd)
 
