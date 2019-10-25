@@ -1,0 +1,8 @@
+exportPattern("^[[:alpha:]]+")
+import(ape)
+import(geiger)
+import(stringr)
+import(phytools)
+import(ggplot2)
+import(reshape2)
+import(RColorBrewer)

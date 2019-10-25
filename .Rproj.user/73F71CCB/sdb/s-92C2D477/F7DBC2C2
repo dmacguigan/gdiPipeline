@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "Package: gdiPipeline\nType: Package\nTitle: What the Package Does (Title Case)\nVersion: 0.1.0\nAuthor: Who wrote it\nMaintainer: The package maintainer <yourself@somewhere.net>\nDescription: More about what it does (maybe more than one line)\n    Use four spaces when indenting paragraphs within the Description.\nLicense: What license is it under?\nEncoding: UTF-8\nLazyData: true\nImports: ape, geiger, stringr, phytools, ggplot2, reshape2, RColorBrewer\n\n",
+    "created" : 1571753192105.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4014427134",
+    "id" : "F7DBC2C2",
+    "lastKnownWriteTime" : 1572018904,
+    "last_content_update" : 1572018904103,
+    "path" : "~/gdiPipeline/DESCRIPTION",
+    "project_path" : "DESCRIPTION",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "dcf"
+}

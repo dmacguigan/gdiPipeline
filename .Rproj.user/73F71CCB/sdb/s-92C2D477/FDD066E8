@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\\name{bppInputs}\n\\alias{bppInputs}\n%- Also NEED an '\\alias' for EACH other topic documented here.\n\\title{\nbppInputs\n}\n\\description{\nGenerates input directories and CTL files for BPP\nTest\n}\n\\usage{\nbppInputs(x)\n}\n%- maybe also 'usage' for other objects documented here.\n\\arguments{\n  \\item{wd}{\n  path for working directory}\n  \\item{tree}{\n  maximally split tree in newick format\n  }\n  \\item{mapping}{\n  txt file, one column with tip names, one column with corresponding species names\n  }\n  \\item{priors}{\n  tab delimited file, one line per combination of priors with priors in the following order: tau_alpha tau_beta theta_alpha theta_beta\n  }\n  \\item{heredity}{\n  heredity file for loci, see BPP documentation\n  }\n  \\item{loci}{\n  loci file, see BPP documentation\n  }\n  \\item{ctl}{\n  BPP template ctl file created by BPPCtlTemplate function\n  }\n  \\item{nloci}{\n  number of loci\n  }\n}\n\\details{\n%%  ~~ If necessary, more details than the description above ~~\n}\n\\value{\n%%  ~Describe the value returned\n%%  If it is a LIST, use\n%%  \\item{comp1 }{Description of 'comp1'}\n%%  \\item{comp2 }{Description of 'comp2'}\n%% ...\n}\n\\references{\n%% ~put references to the literature/web site here ~\n}\n\\author{\n%%  ~~who you are~~\n}\n\\note{\n%%  ~~further notes~~\n}\n\n%% ~Make other sections like Warning with \\section{Warning }{....} ~\n\n\\seealso{\n%% ~~objects to See Also as \\code{\\link{help}}, ~~~\n}\n\\examples{\n##---- Should be DIRECTLY executable !! ----\n##-- ==>  Define data, use random,\n##--\tor do  help(data=index)  for the standard data sets.\n\n## The function is currently defined as\nfunction (x)\n{\n  }\n}\n% Add one or more standard keywords, see file 'KEYWORDS' in the\n% R documentation directory.\n\\keyword{ ~kwd1 }% use one of  RShowDoc(\"KEYWORDS\")\n\\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line\n",
+    "created" : 1571752554320.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "42870618",
+    "id" : "FDD066E8",
+    "lastKnownWriteTime" : 1571851019,
+    "last_content_update" : 1571851019522,
+    "path" : "~/gdiPipeline/man/bppInputes.rd",
+    "project_path" : "man/bppInputes.rd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}

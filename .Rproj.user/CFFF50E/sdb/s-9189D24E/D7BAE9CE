@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# test gdi pileine with lepidum data\n\nlibrary(gdiPipeline)\nlibrary(ape)\nlibrary(geiger)\nlibrary(stringr)\nlibrary(phytools)\n\n# pipeline parameters\n\nwd=\"C:/Users/DanJuliaPC/Desktop/gdiTest\"\ntreefile=\"Elep.tree\"\nmap=\"Elep_allLoci.Imap.txt\"\npriors=\"priors.txt\"\nheredity = \"heredity.txt\"\nloci = \"Elep_allLoci.txt\"\nctl = \"ctlTemplate.ctl\"\n\n# pipeline steps\n\nBPPCtlTemplate(wd)\n\nbppInputs(wd, treefile, map,\n          priors,\n          heredity, loci,\n          ctl, 14)\n\nbppTaskFile(wd)\n\nbppSummarizeGDI(wd)\n",
+    "created" : 1571966390095.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "329455548",
+    "id" : "D7BAE9CE",
+    "lastKnownWriteTime" : 1571973303,
+    "last_content_update" : 1571973303934,
+    "path" : "C:/Users/DanJuliaPC/Desktop/gdiPipeline/testGDIPipeline_Elep.R",
+    "project_path" : "testGDIPipeline_Elep.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

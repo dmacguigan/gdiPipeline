@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# test gdi pileine with lepidum data\n\nlibrary(gdiPipeline)\nlibrary(ape)\nlibrary(geiger)\nlibrary(stringr)\nlibrary(phytools)\n\n# pipeline parameters\n\nwd=\"/Users/dmacguigan/Documents/NearLab/LepidumProject/BPP/GDI\"\ntreefile=\"Elep.tree\"\nmap=\"Elep_allLoci.Imap.txt\"\npriors=\"priors.txt\"\nheredity = \"heredity.txt\"\nloci = \"Elep_allLoci.txt\"\nctl = \"ctlTemplate.ctl\"\nplotColors = c(brewer.pal(12, \"Paired\"))\n\n# pipeline steps\n\nBPPCtlTemplate(wd)\n\nbppInputs(wd, treefile, map,\n          priors,\n          heredity, loci,\n          ctl, 14)\n\nbppTaskFile(wd)\n\ngdi <- bppSummarizeGDI(wd, plotColors)\n",
+    "created" : 1571754345491.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "987366882",
+    "id" : "D8F41CBD",
+    "lastKnownWriteTime" : 1572024492,
+    "last_content_update" : 1572024492082,
+    "path" : "~/gdiPipeline/testGDIPipeline_Elep.R",
+    "project_path" : "testGDIPipeline_Elep.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
