@@ -8,4 +8,5 @@ To download and install this package
 install.packages("devtools")
 library(devtools)
 install_github("dmacguigan/gdiPipeline")
+library(gdiPipeline)
 ```
