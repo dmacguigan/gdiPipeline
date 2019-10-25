@@ -16,10 +16,6 @@ Quick tutorial
 # test gdi pileine with lepidum data
 
 library(gdiPipeline)
-library(ape)
-library(geiger)
-library(stringr)
-library(phytools)
 
 # pipeline parameters
 
