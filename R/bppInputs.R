@@ -72,7 +72,7 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
     ctlTxt <- sub("species&tree = ", paste("species&tree = ", length(tipLabs), " ", taxa_names, sep=""), ctlTxt)
     ctlTxt <- sub("nsamples", taxa_counts, ctlTxt)
     ctlTxt <- sub("nThreads", threads, ctlTxt)
-    ctlTxt <- sub("diploid = 1", paste("diploid = ", rep(1, length(tipLabs), sep = "", collpase = " "), ctlTxt)
+    ctlTxt <- sub("diploid = 1", paste("diploid = ", rep(1, length(tipLabs)), sep = "", collpase = " "), ctlTxt)
     ctlTxt <- sub("thetaprior = a b", paste("thetaprior = ", paste(prior_df[j,3:4], collapse=" "), " E", sep=""), ctlTxt)
     ctlTxt <- sub("tauprior = a b", paste("tauprior = ", paste(prior_df[j,1:2], collapse=" "), sep=""), ctlTxt)
     ctlTxt <- sub("nloci = n", paste("nloci = ", nloci, sep=""), ctlTxt)
