@@ -31,7 +31,7 @@ BPPCtlTemplate <- function(wd){
   close(fileConn)
 }
 
-bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, threads) {
+bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, threads, nreps) {
   # set working directory
   setwd(wd)
 
@@ -82,6 +82,12 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
     write.table(map_df, file=tbl, row.names = FALSE, col.names = FALSE, quote=FALSE)
     close(f)
     close(tbl)
+    for(z in 1:nreps){
+      dir.create(paste(newDir, nreps, sep="-"))
+      file.copy(newDir, paste(newDir, nreps, sep="-"), recursive=TRUE)
+    }
+    # delete the first directory
+    unlink(newDir, recursive = TRUE)
   }
 
   # for each clade in the tree
@@ -139,6 +145,12 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
       ctlTxt <- sub("nThreads", threads, ctlTxt)
       writeLines(ctlTxt, paste(newDir,"/bpp.ctl",sep=""))
       write.table(map_df, file=paste(newDir,"/Imap.txt", sep=""), row.names = FALSE, col.names = FALSE, quote=FALSE)
+      for(z in 1:nreps){
+        dir.create(paste(newDir, nreps, sep="-"))
+        file.copy(newDir, paste(newDir, nreps, sep="-"), recursive=TRUE)
+      }
+      # delete the first directory
+      unlink(newDir, recursive = TRUE)
     }
   }
 }

@@ -39,6 +39,9 @@ bppInputs(x)
   \item{threads}{
   number of threads for BPP
   }
+  \item{nreps}{
+  number of replicate runs for each model and prior combination
+  }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
