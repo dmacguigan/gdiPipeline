@@ -112,7 +112,7 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
       tree_newick <- readLines(paste(modelDir, ".tree", sep=""))
       # read in new tree
       newTree <- read.tree(paste(modelDir, ".tree", sep=""))
-      newTreeTaxa <- (newTre$tip.label)
+      newTreeTaxa <- (newTree$tip.label)
       # modify the BPP control file and the map file
       ctlTxt <- readLines(paste(newDir,"/bpp.ctl",sep=""))
       map_df <- read.table(paste(newDir,"/Imap.txt", sep=""))
