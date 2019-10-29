@@ -145,7 +145,7 @@ bppTaskFile <- function(wd, col) {
   dirs <- gsub("/.*/model", "./model", dirs)
   commands <- NULL
   for(i in dirs){
-    newCommand = paste("cd ", i, ";bpp bpp.ctl", sep="")
+    newCommand = paste("cd ", i, ";bpp --cfile bpp.ctl", sep="")
     commands = c(commands, newCommand)
   }
   fileConn<-file("BPPTaskFile.txt")
