@@ -22,7 +22,7 @@ BPPCtlTemplate <- function(wd){
   "  tauprior = a b",
   "  heredity = 2 heredity.txt",
   "  locusrate = 1 2.0",
-  "  finetune =  1: 3 0.003 0.002 0.00002 0.005 0.9 0.001 0.001",
+  "  finetune =  1: 5 0.001 0.001  0.001 0.3 0.33 1.0",
   "  threads = nThreads",
   "  print = 1 0 0 0",
   "  burnin = 10000",
