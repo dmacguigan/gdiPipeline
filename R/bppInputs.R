@@ -80,6 +80,8 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
     writeLines(ctlTxt, f)
     tbl <- file(paste(newDir,"/Imap.txt", sep=""), "wb")
     write.table(map_df, file=tbl, row.names = FALSE, col.names = FALSE, quote=FALSE)
+    close(f)
+    close(tbl)
   }
 
   # for each clade in the tree
