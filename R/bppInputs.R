@@ -2,7 +2,7 @@
 
 BPPCtlTemplate <- function(wd){
   setwd(wd)
-  fileConn<-file("ctlTemplate.ctl")
+  fileConn<-file("ctlTemplate.ctl", "wb")
   writeLines(c("  seed =  -1",
   "  seqfile = loci.txt",
   "  Imapfile = Imap.txt",
@@ -76,8 +76,10 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
     ctlTxt <- sub("thetaprior = a b", paste("thetaprior = ", paste(prior_df[j,3:4], collapse=" "), " E", sep=""), ctlTxt)
     ctlTxt <- sub("tauprior = a b", paste("tauprior = ", paste(prior_df[j,1:2], collapse=" "), sep=""), ctlTxt)
     ctlTxt <- sub("nloci = n", paste("nloci = ", nloci, sep=""), ctlTxt)
-    writeLines(ctlTxt, paste(newDir,"/bpp.ctl",sep=""))
-    write.table(map_df, file=paste(newDir,"/Imap.txt", sep=""), row.names = FALSE, col.names = FALSE, quote=FALSE)
+    f <- file(paste(newDir,"/bpp.ctl",sep=""), "wb")
+    writeLines(ctlTxt, f)
+    tbl <- file(paste(newDir,"/Imap.txt", sep=""), "wb")
+    write.table(map_df, file=tbl, row.names = FALSE, col.names = FALSE, quote=FALSE)
   }
 
   # for each clade in the tree
