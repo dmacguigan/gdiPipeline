@@ -110,6 +110,9 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
       file.copy(ctl, paste(newDir,"/bpp.ctl", sep=""))
       # write the tree for this delimitation model to a file
       tree_newick <- readLines(paste(modelDir, ".tree", sep=""))
+      # read in new tree
+      newTree <- read.tree(paste(modelDir, ".tree", sep=""))
+      newTreeTaxa <- (newTre$tip.label)
       # modify the BPP control file and the map file
       ctlTxt <- readLines(paste(newDir,"/bpp.ctl",sep=""))
       map_df <- read.table(paste(newDir,"/Imap.txt", sep=""))
@@ -126,7 +129,7 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
       ctlTxt <- sub("species&tree = ", paste("species&tree = ", length(map_table), " ", taxa_names, sep=""), ctlTxt)
       ctlTxt <- sub("nsamples", taxa_counts, ctlTxt)
       ctlTxt <- sub("thetaprior = a b", paste("thetaprior = ", paste(prior_df[j,3:4], collapse=" "), " e", sep=""), ctlTxt)
-      ctlTxt <- sub("diploid = 1", paste("diploid = ", paste(rep(1, length(taxa)), collapse=" "), sep = ""), ctlTxt)
+      ctlTxt <- sub("diploid = 1", paste("diploid = ", paste(rep(1, length(newTreeTaxa)), collapse=" "), sep = ""), ctlTxt)
       ctlTxt <- sub("tauprior = a b", paste("tauprior = ", paste(prior_df[j,1:2], collapse=" "), sep=""), ctlTxt)
       ctlTxt <- sub("nloci = n", paste("nloci = ", nloci, sep=""), ctlTxt)
       ctlTxt <- sub("nThreads", threads, ctlTxt)
