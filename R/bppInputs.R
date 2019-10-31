@@ -83,8 +83,9 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
     close(f)
     close(tbl)
     for(z in 1:nreps){
-      dir.create(paste(newDir, nreps, sep="-"))
-      file.copy(newDir, paste(newDir, nreps, sep="-"), recursive=TRUE)
+      dir.create(paste(newDir, z, sep="-"))
+      fileList <- list.files(newDir, full.names=TRUE)
+      file.copy(fileList, paste(newDir, z, sep="-"))
     }
     # delete the first directory
     unlink(newDir, recursive = TRUE)
@@ -146,8 +147,9 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
       writeLines(ctlTxt, paste(newDir,"/bpp.ctl",sep=""))
       write.table(map_df, file=paste(newDir,"/Imap.txt", sep=""), row.names = FALSE, col.names = FALSE, quote=FALSE)
       for(z in 1:nreps){
-        dir.create(paste(newDir, nreps, sep="-"))
-        file.copy(newDir, paste(newDir, nreps, sep="-"), recursive=TRUE)
+        dir.create(paste(newDir, z, sep="-"))
+        fileList <- list.files(newDir, full.names=TRUE)
+        file.copy(fileList, paste(newDir, z, sep="-"))
       }
       # delete the first directory
       unlink(newDir, recursive = TRUE)
