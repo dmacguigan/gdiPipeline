@@ -30,7 +30,6 @@ plotColors = c(brewer.pal(12, "Paired"), "black")
 nLoci = 14
 threads = 10
 nreps = 4
-mergeReplicates = TRUE
 
 # pipeline steps
 
@@ -44,5 +43,7 @@ bppInputs(wd, treefile, map,
 
 bppTaskFile(wd)
 
-gdi <- bppSummarizeGDI(wd, plotColors, mergeReplicates, nreps)
+gdi <- bppSummarizeGDI(wd, plotColors, nreps)
+
+plotByPrior(gdi, wd, nreps, priors, plotWidth=16, plotHeight=16)
 ```
