@@ -387,23 +387,5 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
       p_count = 0
     }
   }
-  # boxplot of GDI values for each species for each combination of priors
-  for(i in 1:n_priors){
-   dat <- as.data.frame(allGDIList_byPrior[[i]])
-   pdf(file=paste("priors-", i, "_gdi_boxplot.pdf", sep=""), width=plotWidth, height=plotHeight)
-    p <- ggplot(data = melt(dat), aes(y=value, x=variable)) +
-      ylim(c(0,1)) +
-      geom_hline(yintercept = 0.2, lty=2)+
-      geom_hline(yintercept = 0.7, lty=2)+
-      geom_boxplot() +
-      labs(y="GDI", x="species")+
-      ggtitle(label=paste(model, priors, sep=" ")) +
-      annotate("text", label="species", y=0.85, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
-      annotate("text", label="ambiguous", y=0.45, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
-      annotate("text", label="populations", y=0.1, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
-      theme_minimal() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
-    print(p)
-    dev.off()
-  }
 }
+

@@ -5,6 +5,7 @@ library(RColorBrewer)
 library(geiger)
 library(stringr)
 library(phytools)
+library(plyr)
 
 # pipeline parameters
 
