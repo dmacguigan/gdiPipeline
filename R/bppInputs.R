@@ -1,5 +1,3 @@
-# create inputs for BPP analyses
-
 BPPCtlTemplate <- function(wd){
   setwd(wd)
   fileConn<-file("ctlTemplate.ctl", "wb")
@@ -163,7 +161,7 @@ bppTaskFile <- function(wd, col) {
   dirs <- gsub("/.*/model", "./model", dirs)
   commands <- NULL
   for(i in dirs){
-    newCommand = paste("cd ", i, ";bpp --cfile bpp.ctl", sep="")
+    newCommand = paste("cd ", i, ";bpp --cfile bpp.ctl > ", i, "/", gsub("./model.*/", "", i), ".out 2> ", i, "/", gsub("./model.*/", "", i), ".error", sep="")
     commands = c(commands, newCommand)
   }
   fileConn<-file("BPPTaskFile.txt")
@@ -171,19 +169,52 @@ bppTaskFile <- function(wd, col) {
   close(fileConn)
 }
 
-bppSummarizeGDI <- function(wd, col) {
+bppSummarizeGDI <- function(wd, col, nreps) {
+
+  replicate = 0
   setwd(wd)
+
   # get all BPP dirs in the wd
   dirs <- list.dirs(path=wd)
   dirs <- grep("tau", dirs, value=TRUE)
+
   # list to store all gdi estimates
   allGDIList <- vector(mode = "list", length = length(dirs))
   count=1
   for(i in dirs) {
+    replicate = replicate + 1
+    rep <- strsplit(i, "/")
+    rep <- rep[[1]][length(rep[[1]])]
+    # read in population map from std out file
+    con <- file(paste(i, "/", rep, ".out", sep=""), open="r")
+    lines <- c()
+    read=FALSE
+    while(length(line <- readLines(con, n = 1, warn = FALSE)) > 0) {
+      if (startsWith(line, "Map of")) {
+        read=TRUE
+        next
+      } else if (startsWith(line, "Generating")){
+        break
+      } else if (read == TRUE){
+        lines <- c(lines, line)
+      } else if ( length(line) == 0 ) {
+        break
+      }
+    }
+    close(con)
+
+    # split lines and extract taxa names
+    lines <- head(lines,-1)
+    lines <- lines[2:length(lines)]
+    lines <- strsplit(lines, " ")
+    lines <- lapply(lines, function(x){x[!x ==""]})
+    species <- unlist(lapply(lines, '[[', 2))
+
     # read in the posterior
     mcmc <- read.table(paste(i, "/mcmc.txt", sep=""), header=TRUE)
-    p <- strsplit(i, "/")
-    model <- p[[1]][length(p[[1]])-1]
+    prior <- strsplit(i, "/")
+    model <- prior[[1]][length(prior[[1]])-1]
+
     # read in the model tree
     tree <- read.tree(paste(model, ".tree", sep=""))
     taxa <- tree$tip.label
@@ -192,12 +223,16 @@ bppSummarizeGDI <- function(wd, col) {
     gdiList <- vector(mode = "list", length = length(taxa))
     gdiTaxa <- vector(mode = "list", length = length(taxa))
     cols <- colnames(mcmc)
+
     # for each taxon in the tree
     for(j in 1:length(taxa)){
+      # get species index
+      spIndex <- match(taxa[j], species)
+
       # get theta that matches taxon
-      thetaList[[j]] <- mcmc[,j+1]
-      temp <- sapply(taxa, function(x) (grepl(x, names(mcmc)[j+1], fixed = TRUE)))
-      sp <- taxa[temp]
+      thetaList[[j]] <- mcmc[,spIndex+1]
+      sp <- species[spIndex]
+
       # get sister species or node of taxon
       sis <- getSisters(tree, sp, mode="label")
       if(is.character(sis[[1]])){
@@ -214,13 +249,19 @@ bppSummarizeGDI <- function(wd, col) {
       # save list of species
       gdiTaxa[[j]] <- sp
     }
+
     # plot gdi
-    p <- strsplit(i, "/")
-    priors <- p[[1]][length(p[[1]])]
+    priors <- strsplit(i, "/")
+    priors <- priors[[1]][length(priors[[1]])]
     print(model)
     print(priors)
+    dat_theta <- data.frame(matrix(unlist(thetaList), ncol=length(thetaList), byrow=F))
+    dat_tau <- data.frame(matrix(unlist(tauList), ncol=length(tauList), byrow=F))
     dat <- data.frame(matrix(unlist(gdiList), ncol=length(gdiList), byrow=F))
+    colnames(dat_theta) <- unlist(gdiTaxa)
+    colnames(dat_tau) <- unlist(gdiTaxa)
     colnames(dat) <- unlist(gdiTaxa)
+
     pdf(file=paste(model, "_", priors, "_gdi.pdf", sep=""), width=8, height = 6)
     p <- ggplot(data = melt(dat), aes(x=value, color=variable, fill=variable)) +
       xlim(c(0,1)) +
@@ -237,9 +278,132 @@ bppSummarizeGDI <- function(wd, col) {
       theme_minimal()
     print(p)
     dev.off()
+
+    pdf(file=paste(model, "_", priors, "_gdi_boxplot.pdf", sep=""), width=8, height = 6)
+    p <- ggplot(data = melt(dat), aes(y=value, x=variable, fill=variable)) +
+      ylim(c(0,1)) +
+      geom_hline(yintercept = 0.2, lty=2)+
+      geom_hline(yintercept = 0.7, lty=2)+
+      geom_boxplot() +
+      scale_fill_manual(values=col) +
+      labs(fill="species", y="GDI", x="species")+
+      ggtitle(label=paste(model, priors, sep=" ")) +
+      annotate("text", label="species", y=0.85, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      annotate("text", label="ambiguous", y=0.45, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      annotate("text", label="populations", y=0.1, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+    print(p)
+    dev.off()
+
+    # append GDI data to list
     allGDIList[[count]] <- dat
     names(allGDIList)[count] <- paste(model, priors, sep="")
+
+    if (replicate == nreps){
+      replicate = 0
+      for (i in 1:(nreps-1)){
+        dat <- rbind(dat, allGDIList[[count-i]])
+      }
+      colnames(dat) <- unlist(gdiTaxa)
+      priors <- substr(priors, 1, nchar(priors)-2)
+
+      pdf(file=paste(model, "_", priors, "_gdi.pdf", sep=""), width=8, height = 6)
+      p <- ggplot(data = melt(dat), aes(x=value, color=variable, fill=variable)) +
+        xlim(c(0,1)) +
+        geom_vline(xintercept = 0.2, lty=2)+
+        geom_vline(xintercept = 0.7, lty=2)+
+        geom_density(alpha=0.1) +
+        scale_color_manual(values=col) +
+        scale_fill_manual(values=col) +
+        labs(color="species", fill="species", x="GDI")+
+        ggtitle(label=paste(model, priors, sep=" ")) +
+        annotate("text", label="species", x=0.85, y=Inf, hjust=0.5, vjust=1) +
+        annotate("text", label="ambiguous", x=0.45, y=Inf, hjust=0.5, vjust=1) +
+        annotate("text", label="populations", x=0.1, y=Inf, hjust=0.5, vjust=1) +
+        theme_minimal()
+      print(p)
+      dev.off()
+
+      pdf(file=paste(model, "_", priors, "_gdi_boxplot.pdf", sep=""), width=8, height = 6)
+      p <- ggplot(data = melt(dat), aes(y=value, x=variable, fill=variable)) +
+        ylim(c(0,1)) +
+        geom_hline(yintercept = 0.2, lty=2)+
+        geom_hline(yintercept = 0.7, lty=2)+
+        geom_boxplot() +
+        scale_fill_manual(values=col) +
+        labs(fill="species", y="GDI", x="species")+
+        ggtitle(label=paste(model, priors, sep=" ")) +
+        annotate("text", label="species", y=0.85, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+        annotate("text", label="ambiguous", y=0.45, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+        annotate("text", label="populations", y=0.1, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+        theme_minimal() +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+      print(p)
+      dev.off()
+
+    }
     count=count+1
   }
   return(allGDIList)
+
+}
+
+mergeReplicates <- function(wd, col, nreps, priors) {
+
+}
+
+plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
+
+  # read in priors
+  prior_df <- read.table(priors, header=FALSE)
+  n_priors <- nrow(prior_df)
+  allGDIList_byPrior <- vector(mode = "list", length = n_priors)
+
+  count = 0
+  replicate = 0
+  p_count = 0
+
+  for(i in 1:length(gdiDat)) {
+    replicate = replicate + 1
+    count = count + 1
+    if(replicate == nreps){
+      p_count = p_count + 1
+      replicate = 0
+      dat = gdiDat[[i]]
+      for (j in 1:(nreps-1)){
+        dat <- rbind(dat, gdiDat[[count-j]])
+      }
+      # create data frame of GDI values for each prior, only include one instance of each taxon
+      for (k in 1:ncol(dat)){
+        taxa <- colnames(allGDIList_byPrior[[p_count]])
+        if (!((colnames(dat))[k] %in% taxa)){
+          allGDIList_byPrior[[p_count]] <- cbind(allGDIList_byPrior[[p_count]], dat[,k])
+          colnames(allGDIList_byPrior[[p_count]])[ncol(allGDIList_byPrior[[p_count]])] <- colnames(dat)[k]
+        }
+      }
+    }
+    if(p_count == n_priors){
+      p_count = 0
+    }
+  }
+  # boxplot of GDI values for each species for each combination of priors
+  for(i in 1:n_priors){
+   dat <- as.data.frame(allGDIList_byPrior[[i]])
+   pdf(file=paste("priors-", i, "_gdi_boxplot.pdf", sep=""), width=plotWidth, height=plotHeight)
+    p <- ggplot(data = melt(dat), aes(y=value, x=variable)) +
+      ylim(c(0,1)) +
+      geom_hline(yintercept = 0.2, lty=2)+
+      geom_hline(yintercept = 0.7, lty=2)+
+      geom_boxplot() +
+      labs(y="GDI", x="species")+
+      ggtitle(label=paste(model, priors, sep=" ")) +
+      annotate("text", label="species", y=0.85, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      annotate("text", label="ambiguous", y=0.45, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      annotate("text", label="populations", y=0.1, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+    print(p)
+    dev.off()
+  }
 }

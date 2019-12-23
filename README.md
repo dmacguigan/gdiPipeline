@@ -13,21 +13,24 @@ library(gdiPipeline)
 
 Quick tutorial
 ```
-# test gdi pileine with lepidum data
+# test gdi pileine with E. lepidum data
 
 library(gdiPipeline)
 
 # pipeline parameters
 
-wd="/Users/dmacguigan/Documents/NearLab/LepidumProject/BPP/GDI"
+wd="/Users/dmacguigan/Documents/NearLab/LepidumProject/BPP/GDI/bpp-4.1_reps_2"
 treefile="Elep.tree"
 map="Elep_allLoci.Imap.txt"
 priors="priors.txt"
 heredity = "heredity.txt"
 loci = "Elep_allLoci.txt"
-ctl = "ctlTemplate.ctl" # this file will be created below by the function BPPCtlTemplate
-plotColors = c(brewer.pal(12, "Paired"))
-nloci = 14
+ctl = "ctlTemplate.ctl"
+plotColors = c(brewer.pal(12, "Paired"), "black")
+nLoci = 14
+threads = 10
+nreps = 4
+mergeReplicates = TRUE
 
 # pipeline steps
 
@@ -36,9 +39,10 @@ BPPCtlTemplate(wd)
 bppInputs(wd, treefile, map,
           priors,
           heredity, loci,
-          ctl, nloci)
+          ctl, nLoci,
+          threads, nreps)
 
 bppTaskFile(wd)
 
-gdi <- bppSummarizeGDI(wd, plotColors)
+gdi <- bppSummarizeGDI(wd, plotColors, mergeReplicates, nreps)
 ```
