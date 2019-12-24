@@ -384,6 +384,7 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
           colnames(allGDIList_byPrior[[p_count]])[ncol(allGDIList_byPrior[[p_count]])] <- colnames(dat)[k]
         }
       }
+      print(head(allGDIList_byPrior[[p_count]]))
     }
     if(p_count == n_priors){
       p_count = 0
