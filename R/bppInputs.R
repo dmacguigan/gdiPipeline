@@ -391,7 +391,7 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
   }
 
   for (i in 1:length(allGDIList_byPrior)) {
-    dat = allGDIList_byPrior[[i]]
+    dat = as.data.frame(allGDIList_byPrior[[i]])
     pdf(file=paste("prior-", i, "_gdi_boxplot.pdf", sep=""), width=plotWidth, height=plotHeight)
     p <- ggplot(data = melt(dat), aes(y=value, x=variable)) +
       ylim(c(0,1)) +
