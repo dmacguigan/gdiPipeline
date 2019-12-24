@@ -418,7 +418,7 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
     dat_new <- cbind(dat_mean, dat_sd$sd)
     colnames(dat_new) <- c("species", "mean", "sd")
     print(dat_new)
-    dat_n <- count(dat, dat$variable)
+    dat_n <- count(dat, vars="variable")
     print(dat_n)
     dat_new <- cbind(dat_new, dat_n$freq)
     print(dat_new)
