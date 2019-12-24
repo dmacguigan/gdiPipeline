@@ -409,9 +409,9 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
     # plot means and 95% CI for GDIs
     dat <- melt(dat)
     dat_mean <- aggregate(dat[,2], list(dat$variable), mean)
-    colnames(dat_mean) <- c("species, "mean")
+    colnames(dat_mean) <- c("species", "mean")
     dat_sd <- aggregate(dat[,2], list(dat$variable), sd)
-    colnames(dat_sd) <- c("species, "sd")
+    colnames(dat_sd) <- c("species", "sd")
     dat_new <- cbind(dat_mean, dat_sd$sd)
     dat_n <- count(dat[,2], dat$variable)
     dat_new <- cbind(dat_new, dat_n$freq)
