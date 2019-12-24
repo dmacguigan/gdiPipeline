@@ -392,7 +392,6 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
 
   for (i in 1:length(allGDIList_byPrior)) {
     dat = as.data.frame(allGDIList_byPrior[[i]])
-    print(head(dat))
     pdf(file=paste("prior-", i, "_gdi_boxplot.pdf", sep=""), width=plotWidth, height=plotHeight)
     p <- ggplot(data = melt(dat), aes(y=value, x=variable)) +
       ylim(c(0,1)) +
@@ -417,15 +416,12 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
     colnames(dat_sd) <- c("species", "sd")
     dat_new <- cbind(dat_mean, dat_sd$sd)
     colnames(dat_new) <- c("species", "mean", "sd")
-    print(dat_new)
     dat_n <- count(dat, vars="variable")
-    print(dat_n)
     dat_new <- cbind(dat_new, dat_n$freq)
-    print(dat_new)
+    colnames(dat_new) <- c("species", "mean", "sd", "freq")
     dat_new$ci <- qnorm(0.975)*dat_new$sd/sqrt(dat_new$freq) 
-    print(dat_new)
     colnames(dat_new) <- c("species", "mean", "sd", "freq", "ci")
-
+    print(dat_new)
 
     pdf(file=paste("prior-", i, "_gdi_means.pdf", sep=""), width=plotWidth, height=plotHeight)
     p <- ggplot(data=dat_new, aes(x=species, y=mean)) +
