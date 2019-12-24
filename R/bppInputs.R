@@ -355,6 +355,8 @@ mergeReplicates <- function(wd, col, nreps, priors) {
 
 plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
 
+  setwd(wd)	
+
   # read in priors
   prior_df <- read.table(priors, header=FALSE)
   n_priors <- nrow(prior_df)
