@@ -408,21 +408,13 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
     print(p)
     dev.off()
     
-    # plot means and 95% CI for GDIs
+    # plot means and 95% credible interval for GDIs
     dat <- melt(dat)
     dat_mean <- aggregate(dat[,2], list(dat$variable), mean)
     colnames(dat_mean) <- c("species", "mean")
-    dat_sd <- aggregate(dat[,2], list(dat$variable), sd)
-    colnames(dat_sd) <- c("species", "sd")
-    dat_new <- cbind(dat_mean, dat_sd$sd)
-    colnames(dat_new) <- c("species", "mean", "sd")
-    dat_n <- count(dat, vars="variable")
-    dat_new <- cbind(dat_new, dat_n$freq)
-    colnames(dat_new) <- c("species", "mean", "sd", "freq")
-    dat_new$ci <- qnorm(0.975)*(dat_new$sd/sqrt(dat_new$freq)) 
-    colnames(dat_new) <- c("species", "mean", "sd", "freq", "ci")
-    print(dat_new)
-
+    dat_mean$ci <- apply(dat, 2, function(x) ci(x, method="HDI", ci=0.95)
+    colnames(dat_mean) <- c("species", "mean", "ci")
+        
     pdf(file=paste("prior-", i, "_gdi_means.pdf", sep=""), width=plotWidth, height=plotHeight)
     p <- ggplot(data=dat_new, aes(x=species, y=mean)) +
       ylim(c(0,1)) +
