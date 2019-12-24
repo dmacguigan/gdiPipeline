@@ -387,5 +387,54 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
       p_count = 0
     }
   }
+
+  for (i in 1:length(allGDIList_byPrior)) {
+    dat = allGDIList_byPrior[[i]]
+    pdf(file=paste("prior-", i, "_gdi_boxplot.pdf", sep=""), width=plotWidth, height=plotHeight)
+    p <- ggplot(data = melt(dat), aes(y=value, x=variable)) +
+      ylim(c(0,1)) +
+      geom_hline(yintercept = 0.2, lty=2)+
+      geom_hline(yintercept = 0.7, lty=2)+
+      geom_boxplot() +
+      labs(y="GDI", x="species")+
+      ggtitle(label=paste("priors-", i, sep=" ")) +
+      annotate("text", label="species", y=0.85, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      annotate("text", label="ambiguous", y=0.45, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      annotate("text", label="populations", y=0.1, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+    print(p)
+    dev.off()
+    
+    # plot means and 95% CI for GDIs
+    dat <- melt(dat)
+    dat_mean <- aggregate(dat[,2], list(dat$variable), mean)
+    colnames(dat_mean) <- c("species, "mean")
+    dat_sd <- aggregate(dat[,2], list(dat$variable), sd)
+    colnames(dat_sd) <- c("species, "sd")
+    dat_new <- cbind(dat_mean, dat_sd$sd)
+    dat_n <- count(dat[,2], dat$variable)
+    dat_new <- cbind(dat_new, dat_n$freq)
+    dat_new$ci <- qnorm(0.975)*dat_new$sd/sqrt(dat_new$freq) 
+    
+    pdf(file=paste("prior-", i, "_gdi_means.pdf", sep=""), width=plotWidth, height=plotHeight)
+    p <- ggplot(data=dat_new, aes(x=species, y=mean)) +
+      ylim(c(0,1)) +
+      geom_hline(yintercept = 0.2, lty=2) +
+      geom_hline(yintercept = 0.7, lty=2) +
+      geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, position=pd) +
+      geom_point() +
+      labs(y="GDI", x="species")+
+      ggtitle(label=paste("priors-", i, sep=" ")) +
+      annotate("text", label="species", y=0.85, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      annotate("text", label="ambiguous", y=0.45, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      annotate("text", label="populations", y=0.1, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+    print(p)
+    dev.off()
+
+  }
+
 }
 
