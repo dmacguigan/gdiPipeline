@@ -412,15 +412,16 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
     dat <- melt(dat)
     dat_mean <- aggregate(dat[,2], list(dat$variable), mean)
     colnames(dat_mean) <- c("species", "mean")
-    dat_mean$ci <- apply(as.data.frame(allGDIList_byPrior[[i]]), 2, function(x) ci(x, method="HDI", ci=0.95))
-    colnames(dat_mean) <- c("species", "mean", "ci")
+    dat_mean$ci_low <- apply(as.data.frame(allGDIList_byPrior[[i]]), 2, function(x) ci(x, method="HDI", ci=0.95)$CI_low)
+    dat_mean$ci_high <- apply(as.data.frame(allGDIList_byPrior[[i]]), 2, function(x) ci(x, method="HDI", ci=0.95)$CI_high)
+    colnames(dat_mean) <- c("species", "mean", "ci_low", "ci_high")
         
     pdf(file=paste("prior-", i, "_gdi_means.pdf", sep=""), width=plotWidth, height=plotHeight)
-    p <- ggplot(data=dat_new, aes(x=species, y=mean)) +
+    p <- ggplot(data=dat_mean, aes(x=species, y=mean)) +
       ylim(c(0,1)) +
       geom_hline(yintercept = 0.2, lty=2) +
       geom_hline(yintercept = 0.7, lty=2) +
-      geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1) +
+      geom_errorbar(aes(ymin=ci_low, ymax=ci_high), width=.1) +
       geom_point() +
       labs(y="GDI", x="species")+
       ggtitle(label=paste("priors-", i, sep=" ")) +
