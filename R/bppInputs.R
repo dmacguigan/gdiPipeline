@@ -384,7 +384,6 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
           colnames(allGDIList_byPrior[[p_count]])[ncol(allGDIList_byPrior[[p_count]])] <- colnames(dat)[k]
         }
       }
-      print(head(allGDIList_byPrior[[p_count]]))
     }
     if(p_count == n_priors){
       p_count = 0
@@ -417,10 +416,14 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
     dat_sd <- aggregate(dat[,2], list(dat$variable), sd)
     colnames(dat_sd) <- c("species", "sd")
     dat_new <- cbind(dat_mean, dat_sd$sd)
+    print(dat_new)
     dat_n <- count(dat[,2], dat$variable)
+    print(dat_n)
     dat_new <- cbind(dat_new, dat_n$freq)
+    print(dat_new)
     dat_new$ci <- qnorm(0.975)*dat_new$sd/sqrt(dat_new$freq) 
-    
+    print(dat_new)
+
     pdf(file=paste("prior-", i, "_gdi_means.pdf", sep=""), width=plotWidth, height=plotHeight)
     p <- ggplot(data=dat_new, aes(x=species, y=mean)) +
       ylim(c(0,1)) +
