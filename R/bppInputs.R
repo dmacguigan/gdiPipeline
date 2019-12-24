@@ -392,14 +392,14 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
 
   for (i in 1:length(allGDIList_byPrior)) {
     dat = as.data.frame(allGDIList_byPrior[[i]])
-    pdf(file=paste(paste("priors: tau(", prior_df[i,1], ",", prior_df[i,2], "), theta(", prior_df[i,3], ",", prior_df[i,4], ")", sep="")), width=plotWidth, height=plotHeight)
+    pdf(file=paste("priors-tau", prior_df[i,1], prior_df[i,2], "theta", prior_df[i,3], prior_df[i,4], sep=""), width=plotWidth, height=plotHeight)
     p <- ggplot(data = melt(dat), aes(y=value, x=variable)) +
       ylim(c(0,1)) +
       geom_hline(yintercept = 0.2, lty=2)+
       geom_hline(yintercept = 0.7, lty=2)+
       geom_boxplot() +
       labs(y="GDI", x="species")+
-      ggtitle(label=paste("priors-", i, sep=" ")) +
+      ggtitle(label=paste("priors: tau(", prior_df[i,1], ",", prior_df[i,2], "), theta(", prior_df[i,3], ",", prior_df[i,4], ")", sep="")) +
       annotate("text", label="species", y=0.85, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
       annotate("text", label="ambiguous", y=0.45, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
       annotate("text", label="populations", y=0.1, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
@@ -416,7 +416,7 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
     dat_mean$ci_high <- apply(as.data.frame(allGDIList_byPrior[[i]]), 2, function(x) ci(x, method="HDI", ci=0.95)$CI_high)
     colnames(dat_mean) <- c("species", "mean", "ci_low", "ci_high")
         
-    pdf(file=paste(paste("priors: tau(", prior_df[i,1], ",", prior_df[i,2], "), theta(", prior_df[i,3], ",", prior_df[i,4], ")", sep="")), width=plotWidth, height=plotHeight)
+    pdf(file=paste("priors-tau", prior_df[i,1], prior_df[i,2], "theta", prior_df[i,3], prior_df[i,4], sep=""), width=plotWidth, height=plotHeight)
     p <- ggplot(data=dat_mean, aes(x=species, y=mean)) +
       ylim(c(0,1)) +
       geom_hline(yintercept = 0.2, lty=2) +
@@ -424,7 +424,7 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
       geom_errorbar(aes(ymin=ci_low, ymax=ci_high), width=.15) +
       geom_point() +
       labs(y="GDI", x="species")+
-      ggtitle(label=paste("priors-", i, sep=" ")) +
+      ggtitle(label=paste("priors: tau(", prior_df[i,1], ",", prior_df[i,2], "), theta(", prior_df[i,3], ",", prior_df[i,4], ")", sep="")) +
       annotate("text", label="species", y=0.85, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
       annotate("text", label="ambiguous", y=0.45, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
       annotate("text", label="populations", y=0.1, x=-Inf, vjust=1.0, hjust=0.5, angle=90) +
