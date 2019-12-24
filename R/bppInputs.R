@@ -412,7 +412,7 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
     dat <- melt(dat)
     dat_mean <- aggregate(dat[,2], list(dat$variable), mean)
     colnames(dat_mean) <- c("species", "mean")
-    dat_mean$ci <- apply(dat, 2, function(x) ci(x, method="HDI", ci=0.95))
+    dat_mean$ci <- apply(as.data.frame(allGDIList_byPrior[[i]]), 2, function(x) ci(x, method="HDI", ci=0.95))
     colnames(dat_mean) <- c("species", "mean", "ci")
         
     pdf(file=paste("prior-", i, "_gdi_means.pdf", sep=""), width=plotWidth, height=plotHeight)
