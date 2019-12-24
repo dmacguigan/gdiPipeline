@@ -419,7 +419,7 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
     dat_n <- count(dat, vars="variable")
     dat_new <- cbind(dat_new, dat_n$freq)
     colnames(dat_new) <- c("species", "mean", "sd", "freq")
-    dat_new$ci <- qnorm(0.975)*dat_new$sd/sqrt(dat_new$freq) 
+    dat_new$ci <- qnorm(0.975)*(dat_new$sd/sqrt(dat_new$freq)) 
     colnames(dat_new) <- c("species", "mean", "sd", "freq", "ci")
     print(dat_new)
 
@@ -428,7 +428,7 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
       ylim(c(0,1)) +
       geom_hline(yintercept = 0.2, lty=2) +
       geom_hline(yintercept = 0.7, lty=2) +
-      geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1, position=pd) +
+      geom_errorbar(aes(ymin=mean-ci, ymax=mean+ci), width=.1) +
       geom_point() +
       labs(y="GDI", x="species")+
       ggtitle(label=paste("priors-", i, sep=" ")) +
