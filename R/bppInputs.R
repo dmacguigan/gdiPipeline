@@ -158,10 +158,9 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
 bppTaskFile <- function(wd) {
   dirs <- list.dirs(path=wd, full.names=FALSE)
   dirs <- grep("tau", dirs, value=TRUE)
-  dirs <- gsub("/.*/model", "./model", dirs)
   commands <- NULL
   for(i in dirs){
-    newCommand = paste("cd ", i, ";bpp --cfile bpp.ctl > ", i, "/", gsub("./model.*/", "", i), ".out 2> ", i, "/", gsub("./model.*/", "", i), ".error", sep="")
+    newCommand = paste("cd ", i, ";bpp --cfile bpp.ctl > ", i, "/", gsub("/odel.*/", "", i), ".out 2> ", i, "/", gsub("model.*/", "", i), ".error", sep="")
     commands = c(commands, newCommand)
   }
   fileConn<-file("BPPTaskFile.txt")
