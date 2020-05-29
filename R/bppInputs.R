@@ -160,7 +160,7 @@ bppTaskFile <- function(wd) {
   dirs <- grep("tau", dirs, value=TRUE)
   commands <- NULL
   for(i in dirs){
-    newCommand = paste("cd ", i, ";bpp --cfile bpp.ctl > ", i, "/", gsub("/odel.*/", "", i), ".out 2> ", i, "/", gsub("model.*/", "", i), ".error", sep="")
+    newCommand = paste("cd ", i, ";bpp --cfile bpp.ctl > ", gsub("model[0-9]+/", "", i), ".out 2> ", gsub("model[0-9]+/", "", i), ".error", sep="")
     commands = c(commands, newCommand)
   }
   fileConn<-file("BPPTaskFile.txt")
