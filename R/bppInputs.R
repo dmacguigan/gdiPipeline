@@ -155,8 +155,8 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
   }
 }
 
-bppTaskFile <- function(wd, col) {
-  dirs <- list.dirs(path=wd)
+bppTaskFile <- function(wd) {
+  dirs <- list.dirs(path=wd, full.names=FALSE)
   dirs <- grep("tau", dirs, value=TRUE)
   dirs <- gsub("/.*/model", "./model", dirs)
   commands <- NULL
