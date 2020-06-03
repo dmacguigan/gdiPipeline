@@ -468,6 +468,7 @@ checkConvergence <- function(wd, nreps) {
     
     # if we have reached the number of replicates, merge the dataframes in allMCMCList
     if (replicate == nreps){
+      print(paste("running diagnostics for", pr))
       replicate = 0
       allmcmc <- ldply(allMCMCList, rbind)
       # convert to mcmc object
