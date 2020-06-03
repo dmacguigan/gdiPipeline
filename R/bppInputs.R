@@ -435,4 +435,60 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
   }
 
 }
+                              
+checkConvergence <- function(wd, nreps) {
+  replicate = 0
+  setwd(wd)
+  
+  # get all BPP dirs in the wd
+  dirs <- list.dirs(path=wd)
+  dirs <- grep("tau", dirs, value=TRUE)
+  
+  # list to store all gdi estimates
+  allMCMCList <- vector(mode = "list", length = length(nreps))
+  count=1
+  
+  # loop through all directories starting with tau
+  for(i in dirs) {
+    #i = dirs[1]
+    replicate = replicate + 1
+    rep <- strsplit(i, "/")
+    rep <- rep[[1]][length(rep[[1]])]
+    
+    # read in the posterior
+    allMCMCList[[replicate]] <- read.table(paste(i, "/mcmc.txt", sep=""), header=TRUE)[,-1] # drop the first column (number of gens)
+    prior <- strsplit(i, "/")
+    # get model name
+    model <- prior[[1]][length(prior[[1]])-1]
+    # get prior name
+    pr <- prior[[1]][length(prior[[1]])]
+    pr <- strsplit(pr, "-")
+    pr <- Reduce(merge,pr)
+    pr <- paste(pr[-length(pr)], collapse="-")
+    
+    # if we have reached the number of replicates, merge the dataframes in allMCMCList
+    if (replicate == nreps){
+      replicate = 0
+      allmcmc <- ldply(allMCMCList, rbind)
+      # convert to mcmc object
+      allmcmc <- as.mcmc(allmcmc)
+      # convert to mcmc.list object
+      allMCMCList <- as.mcmc.list(lapply(allMCMCList, as.mcmc))
+      # for each parameter, plot the combined trace
+      for(j in 1:ncol(allmcmc)){
+        png(file=paste(model, "/", pr, "_", dimnames(allmcmc)[[2]][j], "-trace.png", sep=""), width=8, height=4, units="in", res=300)
+        plot(allmcmc[,j])
+        dev.off()
+      }
+      # write effective sample sizes to table
+      write.table(effectiveSize(allmcmc), file = paste(model, "/", pr, "_ESS.txt", sep=""), col.names = FALSE)
+      # write Galman and Rubin convergence diagnostic (PSRF) to file
+      sink(file = paste(model, "/", pr, "_PSRF.txt", sep=""))
+      gelman.diag(allMCMCList)
+      sink()
+    }
+    count = count + 1
+  }
+}
+
 
