@@ -485,7 +485,7 @@ checkConvergence <- function(wd, nreps) {
       write.table(effectiveSize(allmcmc), file = paste(model, "/", pr, "_ESS.txt", sep=""), col.names = FALSE)
       # write Galman and Rubin convergence diagnostic (PSRF) to file
       sink(file = paste(model, "/", pr, "_PSRF.txt", sep=""))
-      gelman.diag(allMCMCList)
+      print(gelman.diag(allMCMCList))
       sink()
     }
     count = count + 1
