@@ -53,7 +53,6 @@ bppInputs(wd, treefile, map,
 
 # STEP 4
 # create task file, each line with a different command to run BPP
-# use this task file in conjunction with job array on computing cluster (e.g. https://docs.ycrc.yale.edu/clusters-at-yale/job-scheduling/dsq/)
 bppTaskFile(wd)
 
 # STEP 5
