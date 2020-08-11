@@ -13,22 +13,22 @@ library(gdiPipeline)
 
 Quick tutorial
 ```
-# test gdi pileine with E. lepidum data
+# test gdi pileine with P. kusha data [NEED TO REPLACE WITH EXAMPLE DATA]
 
 library(gdiPipeline)
 
 # pipeline parameters
 
-wd="/Users/dmacguigan/Documents/NearLab/LepidumProject/BPP/GDI/bpp-4.1_reps_2"
-treefile="Elep.tree"
-map="Elep_allLoci.Imap.txt"
+wd="G:/NearLab/Pkus/analyses/BPP/m100p_BPPSetup"
+treefile="Pkus.tree" # make sure newick tree has semicolon at the line end
+map="Pkus.Imap.txt"
 priors="priors.txt"
 heredity = "heredity.txt"
-loci = "Elep_allLoci.txt"
+loci = "m100p_loci.phy"
 ctl = "ctlTemplate.ctl"
 plotColors = c(brewer.pal(12, "Paired"), "black")
-nLoci = 14
-threads = 10
+nLoci = 389
+threads = 8
 nreps = 4
 
 # pipeline steps
