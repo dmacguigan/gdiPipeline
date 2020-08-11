@@ -13,7 +13,7 @@ library(gdiPipeline)
 
 Quick tutorial
 ```
-# test gdi pileine with P. kusha data [NEED TO REPLACE WITH EXAMPLE DATA]
+# test gdi pileine with Percina kusha example data
 
 library(gdiPipeline)
 
