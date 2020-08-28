@@ -3,6 +3,8 @@
 
 R package to run GDI species delimitation analyses using BPP
 
+Tested with BPP v.4.1.4
+
 To download and install this package
 ```
 install.packages("devtools")
