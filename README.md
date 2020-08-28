@@ -20,7 +20,7 @@ Example script
 
 library(gdiPipeline)
 
-# PIPELINE PARAMETERS
+###### PIPELINE PARAMETERS ######
 
 ## general parameters
 
@@ -52,7 +52,7 @@ loci = "m100p_10loci.phy"
 # name for BPP template control file, this will be created in step 1
 ctl = "ctlTemplate.ctl"
 
-# PIPELINE STEPS
+###### PIPELINE STEPS ######
 
 # STEP 1
 # create BPP control file template for bppInputs function
