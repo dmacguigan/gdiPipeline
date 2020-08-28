@@ -15,7 +15,8 @@ library(gdiPipeline)
 
 Example script
 ```
-# test the GDI pileine with Percina kusha example data
+# GDI pileine with Percina kusha example data
+# https://github.com/dmacguigan/gdiPipeline/tree/master/example
 
 library(gdiPipeline)
 
