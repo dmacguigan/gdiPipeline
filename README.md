@@ -11,40 +11,53 @@ install_github("dmacguigan/gdiPipeline")
 library(gdiPipeline)
 ```
 
-Quick tutorial
+Example script
 ```
-# test gdi pileine with Percina kusha example data
+# test the GDI pileine with Percina kusha example data
 
 library(gdiPipeline)
 
-# pipeline parameters
-
+# PIPELINE PARAMETERS
+## general parameters
 wd="./gdiPipeline/example"
-treefile="Pkus.tree" # make sure newick tree has semicolon at the line end
-map="Pkus.Imap.txt"
-priors="priors.txt"
-heredity = "heredity.txt"
-loci = "m100p_10loci.phy"
-ctl = "ctlTemplate.ctl"
-plotColors = c(brewer.pal(12, "Paired"), "black")
+plotColors = c(brewer.pal(12, "Paired"), "black") # for later plots of GDI
 nLoci = 10
 threads = 8
 nreps = 4
 
-# pipeline steps
+## input files
+# maximally split guide tree
+# newick format, include semicolon after tree
+treefile="Pkus.tree" 
+
+# list of prior combinations
+# one line per set of priors
+# each line should contain: tau_alpha tau_beta theta_alpha theta_beta
+priors="priors.txt" 
+
+## BPP-specific input files
+## see the BPP user manual for details on how each file should be formatted
+## https://github.com/bpp/bpp
+map="Pkus.Imap.txt" 
+heredity = "heredity.txt"
+loci = "m100p_10loci.phy"
+
+## name for BPP template control file, this will be created in step 1
+ctl = "ctlTemplate.ctl"
+
+# PIPELINE STEPS
 
 # STEP 1
 # create BPP control file template for bppInputs function
 BPPCtlTemplate(wd)
 
 # STEP 2
-# modify burnin, samplefreq, or nsample parameters in the ctlTemplate.ctl file if necessary before proceeding
+# using a text editor, modify burnin, samplefreq, or nsample parameters in the ctlTemplate.ctl file if necessary before proceeding
 # may also want to specify finetune values based on preliminary runs if mixing/convergence is an issue
 
 # STEP 3
 # create directories and files for BPP runs
-# specify priors (txt file, each line with a specific combination)
-# specify maximally split tree
+# specify priors and maximally split tree
 bppInputs(wd, treefile, map,
           priors,
           heredity, loci,
