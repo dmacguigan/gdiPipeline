@@ -92,66 +92,69 @@ bppInputs <- function(wd, treefile, map, priors, heredity, loci, ctl, nloci, thr
   # for each clade in the tree
   # first
   count = 2
-  for(i in n){
-    # create new directory for each sp delim mode
-    modelDir <- paste("model", count, sep="")
-    dir.create(modelDir)
-    count = count + 1
-    # get tips for clade i
-    t <- tips(tree, node=i)
-    t_prune <- t[2:length(t)]
-    t_keep <- t[1]
-    # create new name for collpased node
-    newName <- paste(t, collapse="")
-    # drop all but one tip in the clade
-    tempT <- drop.tip(tree, t_prune)
-    # rename the remaining tip
-    tempT$tip.label[tempT$tip.label==t_keep] <- newName
-    # write new tree to a file
-    write.tree(tempT, file=paste(modelDir, ".tree", sep=""))
-    # for each combination of priors
-    for(j in 1:nrow(prior_df)){
-      newDir = paste(modelDir, "/tau",paste(prior_df[j,1:2], collapse="-"),"theta",paste(prior_df[j,3:4], collapse="-"), sep="")
-      dir.create(newDir)
-      file.copy(loci, paste(newDir,"/loci.txt", sep=""))
-      file.copy(heredity, paste(newDir,"/heredity.txt", sep=""))
-      file.copy(map, paste(newDir,"/Imap.txt", sep=""))
-      file.copy(ctl, paste(newDir,"/bpp.ctl", sep=""))
-      # write the tree for this delimitation model to a file
-      tree_newick <- readLines(paste(modelDir, ".tree", sep=""))
-      # read in new tree
-      newTree <- read.tree(paste(modelDir, ".tree", sep=""))
-      newTreeTaxa <- (newTree$tip.label)
-      # modify the BPP control file and the map file
-      ctlTxt <- readLines(paste(newDir,"/bpp.ctl",sep=""))
-      map_df <- read.table(paste(newDir,"/Imap.txt", sep=""))
-      # replace names in the map file
-      for(k in t){
-        map_df[2] <- lapply(map_df[2], gsub, pattern = k, replacement = "fakeName")
-      }
-      map_df[2] <- lapply(map_df[2], gsub, pattern = "fakeName", replacement = newName)
-      map_table <- table(map_df[,2])
-      taxa_names <- paste(names(map_table), collapse=" ")
-      taxa_counts <- paste(map_table, collapse=" ")
-      taxa <- (tree$tip.label)
-      ctlTxt <- sub("phy;", tree_newick, ctlTxt)
-      ctlTxt <- sub("species&tree = ", paste("species&tree = ", length(map_table), " ", taxa_names, sep=""), ctlTxt)
-      ctlTxt <- sub("nsamples", taxa_counts, ctlTxt)
-      ctlTxt <- sub("thetaprior = a b", paste("thetaprior = ", paste(prior_df[j,3:4], collapse=" "), " e", sep=""), ctlTxt)
-      ctlTxt <- sub("diploid = 1", paste("diploid = ", paste(rep(1, length(newTreeTaxa)), collapse=" "), sep = ""), ctlTxt)
-      ctlTxt <- sub("tauprior = a b", paste("tauprior = ", paste(prior_df[j,1:2], collapse=" "), sep=""), ctlTxt)
-      ctlTxt <- sub("nloci = n", paste("nloci = ", nloci, sep=""), ctlTxt)
-      ctlTxt <- sub("nThreads", threads, ctlTxt)
-      writeLines(ctlTxt, paste(newDir,"/bpp.ctl",sep=""))
-      write.table(map_df, file=paste(newDir,"/Imap.txt", sep=""), row.names = FALSE, col.names = FALSE, quote=FALSE)
-      for(z in 1:nreps){
-        dir.create(paste(newDir, z, sep="-"))
-        fileList <- list.files(newDir, full.names=TRUE)
-        file.copy(fileList, paste(newDir, z, sep="-"))
-      }
-      # delete the first directory
-      unlink(newDir, recursive = TRUE)
-    }
+  # if there are more than 2 tips in the guide tree...
+  if(length(tipLabs) > 2){
+	  for(i in n){
+		# create new directory for each sp delim mode
+		modelDir <- paste("model", count, sep="")
+		dir.create(modelDir)
+		count = count + 1
+		# get tips for clade i
+		t <- tips(tree, node=i)
+		t_prune <- t[2:length(t)]
+		t_keep <- t[1]
+		# create new name for collpased node
+		newName <- paste(t, collapse="")
+		# drop all but one tip in the clade
+		tempT <- drop.tip(tree, t_prune)
+		# rename the remaining tip
+		tempT$tip.label[tempT$tip.label==t_keep] <- newName
+		# write new tree to a file
+		write.tree(tempT, file=paste(modelDir, ".tree", sep=""))
+		# for each combination of priors
+		for(j in 1:nrow(prior_df)){
+		  newDir = paste(modelDir, "/tau",paste(prior_df[j,1:2], collapse="-"),"theta",paste(prior_df[j,3:4], collapse="-"), sep="")
+		  dir.create(newDir)
+		  file.copy(loci, paste(newDir,"/loci.txt", sep=""))
+		  file.copy(heredity, paste(newDir,"/heredity.txt", sep=""))
+		  file.copy(map, paste(newDir,"/Imap.txt", sep=""))
+		  file.copy(ctl, paste(newDir,"/bpp.ctl", sep=""))
+		  # write the tree for this delimitation model to a file
+		  tree_newick <- readLines(paste(modelDir, ".tree", sep=""))
+		  # read in new tree
+		  newTree <- read.tree(paste(modelDir, ".tree", sep=""))
+		  newTreeTaxa <- (newTree$tip.label)
+		  # modify the BPP control file and the map file
+		  ctlTxt <- readLines(paste(newDir,"/bpp.ctl",sep=""))
+		  map_df <- read.table(paste(newDir,"/Imap.txt", sep=""))
+		  # replace names in the map file
+		  for(k in t){
+			map_df[2] <- lapply(map_df[2], gsub, pattern = k, replacement = "fakeName")
+		  }
+		  map_df[2] <- lapply(map_df[2], gsub, pattern = "fakeName", replacement = newName)
+		  map_table <- table(map_df[,2])
+		  taxa_names <- paste(names(map_table), collapse=" ")
+		  taxa_counts <- paste(map_table, collapse=" ")
+		  taxa <- (tree$tip.label)
+		  ctlTxt <- sub("phy;", tree_newick, ctlTxt)
+		  ctlTxt <- sub("species&tree = ", paste("species&tree = ", length(map_table), " ", taxa_names, sep=""), ctlTxt)
+		  ctlTxt <- sub("nsamples", taxa_counts, ctlTxt)
+		  ctlTxt <- sub("thetaprior = a b", paste("thetaprior = ", paste(prior_df[j,3:4], collapse=" "), " e", sep=""), ctlTxt)
+		  ctlTxt <- sub("diploid = 1", paste("diploid = ", paste(rep(1, length(newTreeTaxa)), collapse=" "), sep = ""), ctlTxt)
+		  ctlTxt <- sub("tauprior = a b", paste("tauprior = ", paste(prior_df[j,1:2], collapse=" "), sep=""), ctlTxt)
+		  ctlTxt <- sub("nloci = n", paste("nloci = ", nloci, sep=""), ctlTxt)
+		  ctlTxt <- sub("nThreads", threads, ctlTxt)
+		  writeLines(ctlTxt, paste(newDir,"/bpp.ctl",sep=""))
+		  write.table(map_df, file=paste(newDir,"/Imap.txt", sep=""), row.names = FALSE, col.names = FALSE, quote=FALSE)
+		  for(z in 1:nreps){
+			dir.create(paste(newDir, z, sep="-"))
+			fileList <- list.files(newDir, full.names=TRUE)
+			file.copy(fileList, paste(newDir, z, sep="-"))
+		  }
+		  # delete the first directory
+		  unlink(newDir, recursive = TRUE)
+		}
+	}
   }
 }
 
