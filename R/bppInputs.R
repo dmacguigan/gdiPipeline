@@ -446,7 +446,7 @@ plotByPrior <- function(gdiDat, wd, nreps, priors, plotWidth, plotHeight) {
 
 }
                               
-checkConvergence <- function(wd, nreps) {
+checkConvergence <- function(wd, nreps, burnin) {
   replicate = 0
   setwd(wd)
   
@@ -466,8 +466,14 @@ checkConvergence <- function(wd, nreps) {
     rep <- rep[[1]][length(rep[[1]])]
     
     # read in the posterior
-    allMCMCList[[replicate]] <- read.table(paste(i, "/mcmc.txt", sep=""), header=TRUE)[,-1] # drop the first column (number of gens)
-    prior <- strsplit(i, "/")
+    allMCMCList[[replicate]] <- read.table(paste(i, "/mcmc.txt", sep=""), header=TRUE)[,-1] # drop the first column (number of genes)
+	# remove burnin as percentage of the chain
+	gen <- nrow(allMCMCList[[replicate]])
+	if(burnin > 0){
+		burnin_gen <- round(gen*burnin, digits=0)
+		allMCMCList[[replicate]] <- allMCMCList[[replicate]][-c(1:burnin_gen),]
+	}	
+	prior <- strsplit(i, "/")
     # get model name
     model <- prior[[1]][length(prior[[1]])-1]
     # get prior name
