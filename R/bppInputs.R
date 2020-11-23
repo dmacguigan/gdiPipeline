@@ -171,7 +171,7 @@ bppTaskFile <- function(wd) {
   close(fileConn)
 }
 
-bppSummarizeGDI <- function(wd, col, nreps) {
+bppSummarizeGDI <- function(wd, col, nreps, burnin) {
 
   replicate = 0
   setwd(wd)
@@ -216,6 +216,13 @@ bppSummarizeGDI <- function(wd, col, nreps) {
     mcmc <- read.table(paste(i, "/mcmc.txt", sep=""), header=TRUE)
     prior <- strsplit(i, "/")
     model <- prior[[1]][length(prior[[1]])-1]
+	
+	# remove burnin as percentage of the chain
+	gen <- nrow(mcmc)
+	if(burnin > 0){
+		burnin_gen <- round(gen*burnin, digits=0)
+		mcmc <- mcmc[-c(1:burnin_gen),]
+	}
 
     # read in the model tree
     tree <- read.tree(paste(model, ".tree", sep=""))
