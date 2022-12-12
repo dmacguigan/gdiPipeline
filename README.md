@@ -29,6 +29,7 @@ plotColors = c(brewer.pal(12, "Paired"), "black") # for later plots of GDI
 nLoci = 10
 threads = 8
 nreps = 4
+burnin = 0.1 # proportion of MCMC generations to discard as burnin
 
 ## input files
 
@@ -83,13 +84,13 @@ bppTaskFile(wd)
 # assess mixing and convergence of BPP analyses
 # diagnostic files are written in each model directory
 # this may take a while to run depending on the number of analyses and the MCMC chain lengths
-checkConvergence(wd=wd, nreps=nreps)
+checkConvergence(wd=wd, nreps=nreps, burnin=burnin)
 
 # STEP 7
 # summarize the bpp results
 # caluclate GDI
 # plot GDI for each replicate run and binning replicate runs
-gdi <- bppSummarizeGDI(wd, plotColors, nreps)
+gdi <- bppSummarizeGDI(wd, plotColors, nreps, burnin)
 
 # plot GDI estimates for all species in one figure
 plotByPrior(gdi, wd, nreps, priors, plotWidth=8, plotHeight=5)
