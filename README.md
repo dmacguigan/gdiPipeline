@@ -58,7 +58,7 @@ ctl = "ctlTemplate.ctl"
 BPPCtlTemplate(wd)
 
 # STEP 2
-# using a text editor, modify burnin, samplefreq, or nsample parameters in the ctlTemplate.ctl file if necessary before proceeding
+# using a text editor, modify parameters like burnin, samplefreq, and/or nsample parameters in the ctlTemplate.ctl file if necessary before proceeding
 # may also want to specify finetune values based on preliminary runs if mixing/convergence is an issue
 
 # STEP 3
