@@ -21,7 +21,7 @@ library(gdiPipeline)
 
 ###### PIPELINE PARAMETERS ######
 
-## general parameters
+###### general parameters
 
 wd="./gdiPipeline/example"
 plotColors = c(brewer.pal(12, "Paired"), "black") # for later plots of GDI
@@ -29,7 +29,7 @@ nLoci = 10
 threads = 8
 nreps = 4
 
-## input files
+###### input files 
 
 # maximally split guide tree
 # newick format, include semicolon after tree
@@ -40,15 +40,15 @@ treefile="Pkus.tree"
 # each line should contain: tau_alpha tau_beta theta_alpha theta_beta
 priors="priors.txt" 
 
-## BPP-specific input files
-## see the BPP user manual for details on how each file should be formatted
-## https://github.com/bpp/bpp
+###### BPP-specific input files
+# see the BPP user manual for details on how each file should be formatted
+# https://github.com/bpp/bpp
 
 map="Pkus.Imap.txt" 
 heredity = "heredity.txt"
 loci = "m100p_10loci.phy"
 
-## name for BPP template control file, this will be created in step 1
+# name for BPP template control file, this will be created in step 1
 ctl = "ctlTemplate.ctl"
 
 ###### PIPELINE STEPS ######
