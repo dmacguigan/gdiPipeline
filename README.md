@@ -48,7 +48,7 @@ map="Pkus.Imap.txt"
 heredity = "heredity.txt"
 loci = "m100p_10loci.phy"
 
-# name for BPP template control file, this will be created in step 1
+## name for BPP template control file, this will be created in step 1
 ctl = "ctlTemplate.ctl"
 
 ###### PIPELINE STEPS ######
