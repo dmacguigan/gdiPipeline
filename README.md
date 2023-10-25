@@ -1,6 +1,6 @@
 # gdiPipeline
 
-R package to run GDI species delimitation analyses using BPP
+R package to calculate the genealogical divergence index (GDI) for species delimitation analyses using BPP. Requires a maximally-split guide tree. GDI described in [Jackson et al. 2017](https://doi.org/10.1093/sysbio/syw117).
 
 Tested with BPP v.4.1.4
 
